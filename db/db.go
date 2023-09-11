@@ -1,11 +1,11 @@
 package db
 
-import "go.mongodb.org/mongo-driver/bson/permitive"
+import "go.mongodb.org/mongo-driver/bson/primitive"
 
 const DBNAME = "specialnight"
 
-func ToObjectID(id string) permitive.ObjectID {
-	oid, err := permitive.ObjectIDFromHex(id)
+func ToObjectID(id string) primitive.ObjectID {
+	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		panic(err)
 	}

@@ -1,6 +1,8 @@
 package api
 
 import (
+	"context"
+
 	"github.com/sxc/specialnight/db"
 	"github.com/sxc/specialnight/types"
 
@@ -27,8 +29,11 @@ func (h *UserHandler) HandleGetUsers(c *fiber.Ctx) error {
 }
 
 func (h *UserHandler) HandleGetUser(c *fiber.Ctx) error {
-	id := c.Params("id")
-	user, err := h.userStore.GetUserByID(id)
+	var (
+		id  = c.Params("id")
+		ctx = context.Background()
+	)
+	user, err := h.userStore.GetUserByID(ctx, id)
 	if err != nil {
 		return err
 	}
