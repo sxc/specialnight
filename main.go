@@ -17,6 +17,33 @@ const dburi = "mongodb://localhost:27017"
 const dbname = "specialnight"
 const userColl = "users"
 
+var config = fiber.Config{
+	// Override default error handler
+	ErrorHandler: func(c *fiber.Ctx, err error) error {
+		// 	// Status code defaults to 500
+		// 	code := fiber.StatusInternalServerError
+
+		// 	// Retrieve the custom status code if it's a *fiber.Error
+		// 	var e *fiber.Error
+		// 	if errors.As(err, &e) {
+		// 		code = e.Code
+		// 	}
+
+		// 	// Send custom error page
+		// 	err = ctx.Status(code).SendFile(fmt.Sprintf("./%d.html", code))
+		// 	if err != nil {
+		// 		// In case the SendFile fails
+		// 		return ctx.Status(fiber.StatusInternalServerError).SendString("Internal Server Error")
+		// 	}
+
+		// 	// Return from handler
+		// 	return nil
+		return c.JSON(map[string]string{
+			"error": err.Error(),
+		})
+	},
+}
+
 func main() {
 
 	// ctx := context.Background()
@@ -52,7 +79,7 @@ func main() {
 	// handlers initialization
 	userHandler := api.NewUserHandler(db.NewMongoUserStore(client))
 
-	app := fiber.New()
+	app := fiber.New(config)
 	apiv1 := app.Group("/api/v1")
 
 	apiv1.Get("/user", userHandler.HandleGetUsers)
