@@ -1,12 +1,23 @@
 package api
 
 import (
+	"github.com/sxc/specialnight/db"
 	"github.com/sxc/specialnight/types"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func HandleGetUsers(c *fiber.Ctx) error {
+type UserHandler struct {
+	userStore db.UserStore
+}
+
+func NewUserHandler(userStore db.UserStore) *UserHandler {
+	return &UserHandler{
+		userStore: userStore,
+	}
+}
+
+func (h *UserHandler) HandleGetUsers(c *fiber.Ctx) error {
 	u := types.User{
 		FirstName: "John",
 		LastName:  "Appleseed",
@@ -15,8 +26,11 @@ func HandleGetUsers(c *fiber.Ctx) error {
 	return c.JSON(u)
 }
 
-func HandleGetUser(c *fiber.Ctx) error {
-	return c.JSON(map[string]string{
-		"user": "John Appleseed",
-	})
+func (h *UserHandler) HandleGetUser(c *fiber.Ctx) error {
+	id := c.Params("id")
+	user, err := h.userStore.GetUserByID(id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(user)
 }
