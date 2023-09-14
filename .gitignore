@@ -26,7 +26,3 @@
 !LICENSE
 
 !*.css
-
-
-# ...even if they are in subdirectories
-!*/
